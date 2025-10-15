@@ -148,6 +148,8 @@ public class LedgerApp {
         String date = java.time.LocalDate.now().toString();
         String time = java.time.LocalTime.now().withNano(0).toString();
 
+        // --- CRITICAL LOGIC: Ensure amount is negative for Payments ---
+        // Multiply by -1 to create a debit entry
         double negativeAmount = -1 * amount;
 
         Transaction payment = new Transaction(date, time, description, vendor, negativeAmount);
@@ -196,7 +198,25 @@ public class LedgerApp {
     }
 
     public static void displayAllEntries() {
-        System.out.println("\n*** Display ALl Entries...");
+        System.out.println("\n====== LEDGER: ALL ENTRIES (NEWEST FIRST) =====");
+        System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        // The logic to print 'Newest First' is to loop BACKWARDS through the list.
+        // The list index runs from 0 (oldest) up to transactions.size() - 1 (newest).
+
+        // Start index: last element (transactions.size() - 1)
+        // Condition: continue as long as index is 0 or greater
+        // Update: decrement the index
+
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+
+            System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+
 
     }
 

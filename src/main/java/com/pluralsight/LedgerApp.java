@@ -1,15 +1,16 @@
 package com.pluralsight;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import com.pluralsight.Capstone.Transaction;
+
+import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class LedgerApp {
     static Scanner scanner = new Scanner(System.in);
-    static List<Transaction> transactions = new ArrayList<>();
+    static List<com.pluralsight.Capstone.Transaction> transactions = new ArrayList<>();
 
     public static void main(String[] args) {
         // Step 1: Load all data into memory before running the app
@@ -18,6 +19,7 @@ public class LedgerApp {
         scanner.close();
 
     }
+    // PHASE 2: DATA LOADING
 
     public static void loadTransactions() {
         String fileName = "transaction.csv";
@@ -40,7 +42,7 @@ public class LedgerApp {
                     System.out.println("Skip malformed line: " + transactionString);
                     continue;
                 }
-                Transaction transaction = new Transaction(
+                com.pluralsight.Capstone.Transaction transaction = new com.pluralsight.Capstone.Transaction(
                         transactionArr[0].trim(),
                         transactionArr[1].trim(),
                         transactionArr[2].trim(),
@@ -59,7 +61,7 @@ public class LedgerApp {
         }
 
     }
-//BookApp
+//BookApp  // PHASE 3: MENU METHODS
     public static void showHomeScreen() {
         boolean endPorgram = false;
         while (!endPorgram) {
@@ -93,13 +95,67 @@ public class LedgerApp {
 
     }
 
+    //2. Implementing D) Add Deposit
+    //This method collects user input, gets the current time, creates a new Transaction object, and saves it. Deposits
+    // should have a positive amount.
+
     public static void addDeposit() {
-        System.out.println("\n*** Add Deposit Screen Placeholder***");
+        System.out.println("\n===== ADD DEPOSIT =====");
+
+        System.out.println("Enter Description: ");
+        String description = scanner.nextLine();
+
+        System.out.println("Enter Vendor: ");
+        String vendor = scanner.nextLine();
+
+        System.out.println("Enter Amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+
+        // Get current date and time (matching the CSV format)
+        // For simplicity, we use String formatting based on the Capstone example: 2023-04-15|10:13:25
+        // Note: If you used LocalDate/LocalTime in your Transaction class, you would use those here.
+
+        String date = java.time.LocalDate.now().toString();
+        String time = java.time.LocalTime.now().withNano(0).toString();
+
+        Transaction deposit = new Transaction(date, time, description, vendor, amount);
+
+        // Save to the file and add to the in-memory list
+        saveTransaction(deposit);
+        transactions.add(deposit);
+
+        System.out.println("SUCCESS: Deposit added and saved to ledger.");
 
     }
+    //3. Implementing P) Make Payment (Debit)
+    //This method is almost identical to the deposit, but it must ensure the amount is saved as a negative number,
+    // as required by the Capstone.
 
     public static void makePayment() {
-        System.out.println("\n*** Ledger Screen Placeholder ***");
+        System.out.println("\n===== MAKE PAYMENT =====");
+
+        System.out.println("Enter Description");
+        String description = scanner.nextLine();
+
+        System.out.println("Enter Vendor: ");
+        String vendor = scanner.nextLine();
+
+        System.out.println("Enter Amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+
+        String date = java.time.LocalDate.now().toString();
+        String time = java.time.LocalTime.now().withNano(0).toString();
+
+        double negativeAmount = -1 * amount;
+
+        Transaction payment = new Transaction(date, time, description, vendor, negativeAmount);
+
+        saveTransaction(payment);
+        transactions.add(payment);
+
+        System.out.println("SUCCESS: Payment recorded and saved to ledger");
 
     }
 
@@ -158,4 +214,29 @@ public class LedgerApp {
         System.out.println("\n*** display entries...");
 
     }
+    //phase4:TRANSACTION I/O (The methods you just built)
+    //1. The Reusable Save Method: saveTransaction()
+    //This method handles the file-writing complexity. Following your instructor's I/O writing style
+    // (using BufferedWriter and FileWriter), we must set the FileWriter to append mode to ensure we don't erase the
+    // existing transactions. This method will be called after the user successfully enters a new transaction.
+    public static void saveTransaction(Transaction transaction) {
+        String fileName = "transaction.csv";
+        try {
+            FileWriter fileWriter = new FileWriter(fileName, true);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(transaction.toCsvString() + "\n");
+
+            bufferedWriter.close();
+        } catch (IOException e) {
+            System.out.println("Error saving transaction: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+
+
+
 }

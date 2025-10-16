@@ -3,65 +3,18 @@ package com.pluralsight;
 import com.pluralsight.Capstone.Transaction;
 
 import java.io.*;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class LedgerApp {
     static Scanner scanner = new Scanner(System.in);
-    static List<com.pluralsight.Capstone.Transaction> transactions = new ArrayList<>();
 
     public static void main(String[] args) {
         // Step 1: Load all data into memory before running the app
-        loadTransactions();
+        TransactionManager.loadTransactions();
         showHomeScreen();
         scanner.close();
 
     }
-    // PHASE 2: DATA LOADING
-
-    public static void loadTransactions() {
-        String fileName = "transaction.csv";
-
-        try {
-            FileReader fileReader = new FileReader("transaction.csv");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            bufferedReader.readLine(); //This reads and discards the first line
-
-            String transactionString;
-
-            while ((transactionString = bufferedReader.readLine()) != null) {
-                if (transactionString.trim().isEmpty()) {
-                    continue;
-                }
-                String[] transactionArr = transactionString.split("\\|");
-
-                if (transactionArr.length != 5) {
-                    System.out.println("Skip malformed line: " + transactionString);
-                    continue;
-                }
-                com.pluralsight.Capstone.Transaction transaction = new com.pluralsight.Capstone.Transaction(
-                        transactionArr[0].trim(),
-                        transactionArr[1].trim(),
-                        transactionArr[2].trim(),
-                        transactionArr[3].trim(),
-                        Double.parseDouble(transactionArr[4].trim())
-                );
-                transactions.add(transaction);
-            }
-            bufferedReader.close();
-
-        } catch (IOException e) {
-
-            System.out.println("Error reading transaction file: " + e.getMessage());
-
-            throw new RuntimeException(e);
-        }
-
-    }
-
     //BookApp  // PHASE 3: MENU METHODS
     public static void showHomeScreen() {
         boolean endPorgram = false;
@@ -123,8 +76,9 @@ public class LedgerApp {
         Transaction deposit = new Transaction(date, time, description, vendor, amount);
 
         // Save to the file and add to the in-memory list
-        saveTransaction(deposit);
-        transactions.add(deposit);
+        TransactionManager.saveTransaction(deposit);
+        TransactionManager.transactions.add(deposit);
+
 
         System.out.println("SUCCESS: Deposit added and saved to ledger.");
 
@@ -155,8 +109,8 @@ public class LedgerApp {
 
         Transaction payment = new Transaction(date, time, description, vendor, negativeAmount);
 
-        saveTransaction(payment);
-        transactions.add(payment);
+        TransactionManager.saveTransaction(payment);
+        TransactionManager.transactions.add(payment);
 
         System.out.println("SUCCESS: Payment recorded and saved to ledger");
 
@@ -212,10 +166,10 @@ public class LedgerApp {
         // Condition: continue as long as index is 0 or greater
         // Update: decrement the index
 
-        for (int i = transactions.size() - 1; i >= 0; i--) {
+        for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
 
             // Get the Transaction object at the current inde
-            Transaction t = transactions.get(i);
+            Transaction t = TransactionManager.transactions.get(i);
 
             // Use printf and Getters for clean, aligned output
             System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
@@ -233,8 +187,8 @@ public class LedgerApp {
         System.out.println("-------------------------------------------------------------------------------------------------");
 
 
-        for (int i = transactions.size() - 1; i >= 0; i--) {
-            Transaction t = transactions.get(i);
+        for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
+            Transaction t = TransactionManager.transactions.get(i);
 
             if (t.getAmount() > 0) {
                 System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
@@ -251,8 +205,8 @@ public class LedgerApp {
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------");
 
-        for (int i = transactions.size() - 1; i >= 0; i--) {
-            Transaction t = transactions.get(i);
+        for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
+            Transaction t = TransactionManager.transactions.get(i);
 
             if (t.getAmount() < 0) {
                 // Use Math.abs() to display the amount as positive for reporting clarity
@@ -265,12 +219,19 @@ public class LedgerApp {
             }
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------");
-    } // <--- THIS is the required closing brace!
+    }
+
     public static void showReportsScreen() {
         String choice;
         do {
-            System.out.println("----");
-            System.out.println("----");
+            System.out.println("\n===== REPORTS MENU =====");
+            System.out.println("1) Month To Date");
+            System.out.println("2) Previous Month");
+            System.out.println("3) Year To Date");
+            System.out.println("4) Previous Year");
+            System.out.println("5) Search by Vendor");
+            System.out.println("0) Back (to Ledger page)");
+            System.out.print("Please enter your choice: ");
 
             choice = scanner.nextLine().toUpperCase();
             switch (choice) {
@@ -303,8 +264,8 @@ public static void findEntriesByVendor() {
     System.out.printf("%-10s | %-8s | %-30s | %20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
     System.out.println("-------------------------------------------------------------------------------------------");
 
-    for (int i = transactions.size() -1; i >= 0; i--) {
-        Transaction t = transactions.get(i);
+    for (int i = TransactionManager.transactions.size() -1; i >= 0; i--) {
+        Transaction t = TransactionManager.transactions.get(i);
 
         if (t.getVendor().trim().equalsIgnoreCase(searchVendor)) {
             System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
@@ -313,26 +274,6 @@ public static void findEntriesByVendor() {
     System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
 
 }
-    //phase4:TRANSACTION I/O (The methods you just built)
-    //1. The Reusable Save Method: saveTransaction()
-    //This method handles the file-writing complexity. Following your instructor's I/O writing style
-    // (using BufferedWriter and FileWriter), we must set the FileWriter to append mode to ensure we don't erase the
-    // existing transactions. This method will be called after the user successfully enters a new transaction.
-    public static void saveTransaction(Transaction transaction) {
-        String fileName = "transaction.csv";
-        try {
-            FileWriter fileWriter = new FileWriter(fileName, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-            bufferedWriter.write(transaction.toCsvString() + "\n");
-
-            bufferedWriter.close();
-        } catch (IOException e) {
-            System.out.println("Error saving transaction: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
 
 
 }

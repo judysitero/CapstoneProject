@@ -199,6 +199,8 @@ public class LedgerApp {
 
     public static void displayAllEntries() {
         System.out.println("\n====== LEDGER: ALL ENTRIES (NEWEST FIRST) =====");
+
+        // Print a header for the table
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("--------------------------------------------------------------------------------------------");
 
@@ -210,8 +212,11 @@ public class LedgerApp {
         // Update: decrement the index
 
         for (int i = transactions.size() - 1; i >= 0; i--) {
+
+            // Get the Transaction object at the current inde
             Transaction t = transactions.get(i);
 
+            // Use printf and Getters for clean, aligned output
             System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
@@ -221,12 +226,41 @@ public class LedgerApp {
     }
 
     public static void displayDeposits() {
-        System.out.println("\n**** Display entries...");
+        System.out.println("\n===== LEDGER: DEPOSITS ONLY (NEWEST FIRST) =====");
+
+
+        System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-------------------------------------------------------------------------------------------------");
+
+
+        for (int i = transactions.size() -1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+
+            if (t.getAmount() > 0) {
+                System.out.printf("%-10s | %-8s | %-30s | %-20s | $%10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------");
 
     }
 
     public static void displayPayments() {
-        System.out.println("\n**** Display entries...");
+        System.out.println("\n===== LEDGER: PAYMENTS ONLY (NEWEST FIRST) =====");
+
+
+        System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------");
+
+        for (int i = transactions.size() - 1; i >=0; i--) {
+            Transaction t = transactions.get(i);
+
+            if (t.getAmount() < 0) {
+                // We use Math.abs() here to display the amount as positive,
+                // even though it's stored as negative, for a clean report view.
+                System.out.printf("%-10s | %-8s | %-30s | %-20s, $%-10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), Math.abs(t.getAmount())); // To display absolute value
+            }
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------");
 
     }
 

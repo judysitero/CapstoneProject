@@ -1,4 +1,4 @@
-package com.pluralsight.Capstone;
+package com.pluralsight;
 
 public class Transaction {
     private String date;

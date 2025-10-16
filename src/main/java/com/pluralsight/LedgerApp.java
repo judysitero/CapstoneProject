@@ -1,9 +1,12 @@
 package com.pluralsight;
 
-import com.pluralsight.Capstone.Transaction;
+import com.pluralsight.Transaction;
+import com.pluralsight.TransactionManager;
 
 import java.io.*;
 import java.util.Scanner;
+
+/** My User Interface (UI) and Control Center. This tells the data manager what to and displays the result to the user */
 
 public class LedgerApp {
     static Scanner scanner = new Scanner(System.in);
@@ -15,9 +18,13 @@ public class LedgerApp {
         scanner.close();
 
     }
-    //BookApp  // PHASE 3: MENU METHODS
+    // PHASE 3: MENU METHODS (use BookApp for Reference)
+
+    /** Main Navigation Loop. Keeps the program running and directs traffic between D, P, L, X based on user input. */
     public static void showHomeScreen() {
         boolean endPorgram = false;
+
+        // The main loop keeps the application running until endProgram is true
         while (!endPorgram) {
             System.out.println("\n===== ACCOUNTING LEDGER HOME ====");
             System.out.println("D) Add Deposit");
@@ -49,12 +56,12 @@ public class LedgerApp {
 
     }
 
-    //2. Implementing D) Add Deposit
-    //This method collects user input, gets the current time, creates a new Transaction object, and saves it. Deposits
-    // should have a positive amount.
+    /**Implementing D) Add Deposit
+    This method collects user input, gets the current time, creates a new Transaction object, and saves it.*/
 
+    //The method prompts the user for details (Description, Vendor, Amount).
     public static void addDeposit() {
-        System.out.println("\n===== ADD DEPOSIT =====");
+        System.out.println("\n===== ADD A DEPOSIT =====");
 
         System.out.println("Enter Description: ");
         String description = scanner.nextLine();
@@ -66,29 +73,28 @@ public class LedgerApp {
         double amount = scanner.nextDouble();
         scanner.nextLine();
 
-        // Get current date and time (matching the CSV format)
-        // For simplicity, we use String formatting based on the Capstone example: 2023-04-15|10:13:25
-        // Note: If you used LocalDate/LocalTime in your Transaction class, you would use those here.
-
+        //We will use LocalDate and LocalTime to automatically set the entry time.
         String date = java.time.LocalDate.now().toString();
         String time = java.time.LocalTime.now().withNano(0).toString();
 
+        //We create a new Transaction object
         Transaction deposit = new Transaction(date, time, description, vendor, amount);
 
-        // Save to the file and add to the in-memory list
+        //Call TransactionManager.saveTransaction(deposit) to permanently record the data to the CSV file
         TransactionManager.saveTransaction(deposit);
+
+        //Call TransactionManager.transactions.add(deposit) to update the in-memory list.
         TransactionManager.transactions.add(deposit);
 
 
         System.out.println("SUCCESS: Deposit added and saved to ledger.");
 
     }
-    //3. Implementing P) Make Payment (Debit)
-    //This method is almost identical to the deposit, but it must ensure the amount is saved as a negative number,
-    // as required by the Capstone.
+    /**Implementing P) Make Payment (Debit). This method is similar to the addDeposit, but
+     the amount is saved as a negative number*/
 
     public static void makePayment() {
-        System.out.println("\n===== MAKE PAYMENT =====");
+        System.out.println("\n===== MAKE A PAYMENT =====");
 
         System.out.println("Enter Description");
         String description = scanner.nextLine();
@@ -103,7 +109,7 @@ public class LedgerApp {
         String date = java.time.LocalDate.now().toString();
         String time = java.time.LocalTime.now().withNano(0).toString();
 
-        // --- CRITICAL LOGIC: Ensure amount is negative for Payments ---
+
         // Multiply by -1 to create a debit entry
         double negativeAmount = -1 * amount;
 
@@ -115,6 +121,8 @@ public class LedgerApp {
         System.out.println("SUCCESS: Payment recorded and saved to ledger");
 
     }
+
+    /** This will be out second while-loop but for managing the filters (A, D, P, R, H) and directs control to the display methods.*/
 
     public static void showLedgerScreen() {
         boolean backToHome = false;
@@ -142,20 +150,24 @@ public class LedgerApp {
                     showReportsScreen();
                     break;
                 case "H":
-                    backToHome = true;
+                    backToHome = true; // Will exit the Ledger loop and return to the Home screen
                     break;
                 default:
-                    System.out.println("invalid choice. Please select A, D, P, R, or H.");
+                    System.out.println("INVALID CHOICE: Please select A, D, P, R, or H.");
                     break;
             }
         }
 
     }
 
-    public static void displayAllEntries() {
-        System.out.println("\n====== LEDGER: ALL ENTRIES (NEWEST FIRST) =====");
+    /**MY DISPLAY AND FILTERING METHODS.*/
 
-        // Print a header for the table
+    //This part here will read and present the entire set of financial transactions to the screen,
+    // showing the newest entries first.
+    public static void displayAllEntries() {
+        System.out.println("\n====== LEDGER: ALL ENTRIES  =====");
+
+        // Printing a header for the table. Use printf.
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("--------------------------------------------------------------------------------------------");
 
@@ -168,7 +180,7 @@ public class LedgerApp {
 
         for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
 
-            // Get the Transaction object at the current inde
+            // Get the Transaction object at the current index
             Transaction t = TransactionManager.transactions.get(i);
 
             // Use printf and Getters for clean, aligned output
@@ -179,9 +191,9 @@ public class LedgerApp {
 
     }
 
+    // This part here will filter the central data to show only income entries (deposits).
     public static void displayDeposits() {
-        System.out.println("\n===== LEDGER: DEPOSITS ONLY (NEWEST FIRST) =====");
-
+        System.out.println("\n===== LEDGER: DEPOSITS ONLY  =====");
 
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-------------------------------------------------------------------------------------------------");
@@ -190,6 +202,7 @@ public class LedgerApp {
         for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
             Transaction t = TransactionManager.transactions.get(i);
 
+            //Conditional (if statement): Checks if t.getAmount() > 0. Loops: Iterates over the list, but only prints if the condition is met.
             if (t.getAmount() > 0) {
                 System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
@@ -198,8 +211,9 @@ public class LedgerApp {
 
 
     }
+    // This also filters the central data to show only expense entries (payments/debits).
     public static void displayPayments() {
-        System.out.println("\n===== LEDGER: PAYMENTS ONLY (NEWEST FIRST) =====");
+        System.out.println("\n===== LEDGER: PAYMENTS ONLY  =====");
 
         // Print header
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
@@ -208,6 +222,7 @@ public class LedgerApp {
         for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
             Transaction t = TransactionManager.transactions.get(i);
 
+            //Conditional (if statement): Checks if t.getAmount() < 0. Math.abs(): Used to display the negative stored amount as a positive value for clearer reporting.
             if (t.getAmount() < 0) {
                 // Use Math.abs() to display the amount as positive for reporting clarity
                 System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n",
@@ -254,7 +269,7 @@ public class LedgerApp {
         } while(!choice.equals("0"));
     }
 
-
+    // This part here will filter the central data based on user input.
 public static void findEntriesByVendor() {
     System.out.println("\n===== REPORT: SEARCH BY VENDOR =====");
     System.out.println("Enter Vendor Name to search for: ");
@@ -267,6 +282,8 @@ public static void findEntriesByVendor() {
     for (int i = TransactionManager.transactions.size() -1; i >= 0; i--) {
         Transaction t = TransactionManager.transactions.get(i);
 
+        //We will use t.getVendor().trim().equalsIgnoreCase(searchVendor) to find case-insensitive matches.
+        // Loops: Iterates through all entries and prints only the matching ones
         if (t.getVendor().trim().equalsIgnoreCase(searchVendor)) {
             System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
         }

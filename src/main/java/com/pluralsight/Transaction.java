@@ -14,6 +14,7 @@ public class Transaction {
         this.vendor = vendor;
         this.amount = amount;
     }
+
     public String toCsvString() {
         return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
     }

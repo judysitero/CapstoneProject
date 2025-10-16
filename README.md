@@ -15,7 +15,7 @@ A comprehensive Java-based accounting ledger system that allows users to track f
 
 The Accounting Ledger Application is a console-based financial tracking system that helps users manage their income and expenses. It provides a user-friendly interface for recording transactions, viewing financial history, and generating custom reports.
 
-## ✨ Features
+## Features
 
 - **💰 Deposit Management**: Record income transactions with automatic timestamping
 - **💳 Payment Tracking**: Log expense transactions with negative amount handling
@@ -24,7 +24,7 @@ The Accounting Ledger Application is a console-based financial tracking system t
 - **💾 Data Persistence**: Automatic CSV file storage and loading
 - **🕒 Real-time Timestamps**: Automatic date and time recording for all transactions
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
@@ -34,7 +34,7 @@ src/
 ```
 
 
-## 📝 Usage Guide
+## Usage Guide
 
 ### Main Menu Options
 - **D) Add Deposit**: Record new income transactions
@@ -57,85 +57,51 @@ src/
 - **5) Search by Vendor**: Find transactions by vendor name
 - **0) Back**: Return to ledger screen
 
-## 🖥️ Output Descriptions
+## Output Descriptions
 
 ### 🏠 Home Screen Output
-<img width="324" height="159" alt="image" src="https://github.com/user-attachments/assets/408338e8-c251-4988-8f8f-5c4e865fbec0" />
+<img width="820" height="145" alt="image" src="https://github.com/user-attachments/assets/2229cfa4-b1c2-45af-8d27-e069dadcad89" />
+
 
 **Purpose**: Main navigation hub with clear menu options and professional formatting for easy user interaction.
 
 ### 💰 Deposit Entry Output
-<img width="750" height="191" alt="image" src="https://github.com/user-attachments/assets/4dac10d0-b819-4498-88ee-016b3b335535" />
+<img width="824" height="186" alt="image" src="https://github.com/user-attachments/assets/fb1efbf5-89e8-4fb9-b65e-08874b6a7c50" />
+
 
 **Purpose**: Clean, focused interface for recording income transactions with immediate success confirmation.
 
 ### 💳 Payment Entry Output  
+<img width="827" height="194" alt="image" src="https://github.com/user-attachments/assets/fdb507b3-edde-4689-b685-3195c2d895a5" />
 
-```
-
-===== MAKE A PAYMENT =====
-Enter Description: 
-Enter Vendor: 
-Enter Amount: 
-SUCCESS: Payment recorded and saved to ledger
-```
 **Purpose**: Dedicated payment interface that automatically converts amounts to negative values for proper accounting.
 
 ### 📋 Ledger Display Output
-```
-====== LEDGER: ALL ENTRIES =====
-Date       | Time     | Description                    | Vendor               | Amount    
---------------------------------------------------------------------------------------------
-2023-10-15 | 14:30:25 | Grocery Shopping              | SuperMart            | $    45.67
-2023-10-14 | 09:15:10 | Paycheck Deposit              | ABC Company          | $ 1,500.00
-```
+<img width="820" height="344" alt="image" src="https://github.com/user-attachments/assets/bd75bd09-cba9-40fe-9c7d-808fabb5ac8e" />
+
 **Purpose**: Professional tabular display with proper column alignment, currency formatting, and newest-first sorting for easy financial review.
 
 ### 💵 Deposits-Only Output
-```
-===== LEDGER: DEPOSITS ONLY =====
-Date       | Time     | Description                    | Vendor               | Amount    
--------------------------------------------------------------------------------------------------
-2023-10-14 | 09:15:10 | Paycheck Deposit              | ABC Company          | $ 1,500.00
-2023-10-01 | 08:45:00 | Freelance Work                | Client XYZ           | $   750.00
-```
+<img width="839" height="217" alt="image" src="https://github.com/user-attachments/assets/6a01dd4c-880c-4402-9fb7-7b5360fc6620" />
+
 **Purpose**: Filtered view showing only positive transactions with the same professional formatting as the full ledger.
 
 ### 🛒 Payments-Only Output
-```
-===== LEDGER: PAYMENTS ONLY =====
-Date       | Time     | Description                    | Vendor               | Amount    
------------------------------------------------------------------------------------------------------------------------------
-2023-10-15 | 14:30:25 | Grocery Shopping              | SuperMart            | $    45.67
-2023-10-12 | 19:20:15 | Dinner with Friends           | Local Restaurant     | $    85.43
-```
+<img width="832" height="212" alt="image" src="https://github.com/user-attachments/assets/a4d274da-fcb1-4176-b162-db796e39b5cf" />
+
 **Purpose**: Expense-focused view displaying absolute values of negative amounts for clearer financial analysis.
 
 ### 🔍 Vendor Search Output
-```
-===== REPORT: SEARCH BY VENDOR =====
-Enter Vendor Name to search for: SuperMart
+<img width="837" height="253" alt="image" src="https://github.com/user-attachments/assets/e3e982c8-4c00-415d-8f08-1bf2b83e31d8" />
 
-Date       | Time     | Description                    | Vendor               | Amount    
--------------------------------------------------------------------------------------------
-2023-10-15 | 14:30:25 | Grocery Shopping              | SuperMart            | $    45.67
-2023-10-08 | 16:45:30 | Weekly Groceries              | SuperMart            | $    62.15
-```
 **Purpose**: Case-insensitive vendor search with full transaction details, helping users track spending with specific merchants.
 
 ### 📊 Reports Menu Output
-```
-===== REPORTS MENU =====
-1) Month To Date
-2) Previous Month  
-3) Year To Date
-4) Previous Year
-5) Search by Vendor
-0) Back (to Ledger page)
-```
+<img width="826" height="182" alt="image" src="https://github.com/user-attachments/assets/7665381b-3376-4682-9193-4ff7021a079f" />
+
 **Purpose**: Extended reporting interface with placeholder options for future date-based filtering functionality.
 
-## 🔧 Technical Details
+## Technical Details
 
 ### Data Storage
 - **Format**: Pipe-delimited CSV file (`transactions.csv`)
@@ -153,7 +119,7 @@ Date       | Time     | Description                    | Vendor               | 
 - Input validation for malformed data
 - Graceful application termination
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 - [ ] Date-range filtering for reports
 - [ ] Monthly and yearly summary statistics

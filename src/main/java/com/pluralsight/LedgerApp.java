@@ -32,13 +32,13 @@ public class LedgerApp {
 
             String transactionString;
 
-            while ((transactionString = bufferedReader.readLine()) !=null) {
+            while ((transactionString = bufferedReader.readLine()) != null) {
                 if (transactionString.trim().isEmpty()) {
                     continue;
                 }
                 String[] transactionArr = transactionString.split("\\|");
 
-                if (transactionArr.length !=5) {
+                if (transactionArr.length != 5) {
                     System.out.println("Skip malformed line: " + transactionString);
                     continue;
                 }
@@ -61,7 +61,8 @@ public class LedgerApp {
         }
 
     }
-//BookApp  // PHASE 3: MENU METHODS
+
+    //BookApp  // PHASE 3: MENU METHODS
     public static void showHomeScreen() {
         boolean endPorgram = false;
         while (!endPorgram) {
@@ -180,7 +181,7 @@ public class LedgerApp {
                 case "D":
                     displayDeposits();
                     break;
-                case"P":
+                case "P":
                     displayPayments();
                     break;
                 case "R":
@@ -222,7 +223,6 @@ public class LedgerApp {
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
 
-
     }
 
     public static void displayDeposits() {
@@ -233,41 +233,86 @@ public class LedgerApp {
         System.out.println("-------------------------------------------------------------------------------------------------");
 
 
-        for (int i = transactions.size() -1; i >= 0; i--) {
+        for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
 
             if (t.getAmount() > 0) {
-                System.out.printf("%-10s | %-8s | %-30s | %-20s | $%10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+                System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
             }
         }
         System.out.println("--------------------------------------------------------------------------------------------------------------------------");
 
-    }
 
+    }
     public static void displayPayments() {
         System.out.println("\n===== LEDGER: PAYMENTS ONLY (NEWEST FIRST) =====");
 
-
+        // Print header
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------");
 
-        for (int i = transactions.size() - 1; i >=0; i--) {
+        for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
 
             if (t.getAmount() < 0) {
-                // We use Math.abs() here to display the amount as positive,
-                // even though it's stored as negative, for a clean report view.
-                System.out.printf("%-10s | %-8s | %-30s | %-20s, $%-10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), Math.abs(t.getAmount())); // To display absolute value
+                // Use Math.abs() to display the amount as positive for reporting clarity
+                System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        Math.abs(t.getAmount()));
             }
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------");
-
-    }
-
+    } // <--- THIS is the required closing brace!
     public static void showReportsScreen() {
-        System.out.println("\n*** display entries...");
+        String choice;
+        do {
+            System.out.println("----");
+            System.out.println("----");
 
+            choice = scanner.nextLine().toUpperCase();
+            switch (choice) {
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                    System.out.println("Report " + choice + " is a Placeholder for Date Logic");
+                    break;
+                case "5":
+                    findEntriesByVendor();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("invalid choice. Please select 1-5, or 0 to go back ");
+                    break;
+            }
+
+        } while(!choice.equals("0"));
     }
+
+
+public static void findEntriesByVendor() {
+    System.out.println("\n===== REPORT: SEARCH BY VENDOR =====");
+    System.out.println("Enter Vendor Name to search for: ");
+    String searchVendor = scanner.nextLine().trim();
+
+    // The logic to display results is the same as the "All Entries" display
+    System.out.printf("%-10s | %-8s | %-30s | %20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
+    System.out.println("-------------------------------------------------------------------------------------------");
+
+    for (int i = transactions.size() -1; i >= 0; i--) {
+        Transaction t = transactions.get(i);
+
+        if (t.getVendor().trim().equalsIgnoreCase(searchVendor)) {
+            System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n", t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+        }
+    }
+    System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
+
+}
     //phase4:TRANSACTION I/O (The methods you just built)
     //1. The Reusable Save Method: saveTransaction()
     //This method handles the file-writing complexity. Following your instructor's I/O writing style
@@ -286,10 +331,7 @@ public class LedgerApp {
             System.out.println("Error saving transaction: " + e.getMessage());
             throw new RuntimeException(e);
         }
-
     }
-
-
 
 
 

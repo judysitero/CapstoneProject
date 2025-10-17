@@ -240,7 +240,7 @@ public class LedgerApp {
     }
 
     public static void filterAndDisplayByDate(LocalDate startDate, LocalDate endDate, String reportTitle) {
-        System.out.println("\n===== LEDGER: " + reportTitle + " =====");
+        System.out.println("\n========= LEDGER: " + reportTitle + " =========");
 
         System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
         System.out.println("--------------------------------------------------------------------------------------------");

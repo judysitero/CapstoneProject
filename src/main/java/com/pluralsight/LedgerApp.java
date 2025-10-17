@@ -172,7 +172,7 @@ public class LedgerApp {
         System.out.println("\n====== LEDGER: ALL ENTRIES  =====");
 
         // Printing a header for the table. Use printf.
-        System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount"); //Workbook 1, Section 3-3 (Formatting Output)
         System.out.println("--------------------------------------------------------------------------------------------");
 
         // The logic to print 'Newest First' is to loop BACKWARDS through the list.

@@ -22,6 +22,7 @@ public class LedgerApp {
     }
     // PHASE 3: MENU METHODS (use BookApp for Reference)
 
+    //MY HOME SCREEN
     /** Main Navigation Loop. Keeps the program running and directs traffic between D, P, L, X based on user input. */
     public static void showHomeScreen() {
         boolean endPorgram = false;

@@ -149,3 +149,8 @@ src/
 - File I/O exceptions with user-friendly messages
 - Input validation for malformed data
 - Graceful application termination
+
+## The Most Interesting Code: Smart Date Range Reporting
+I chose this portion of code because it demonstrates sophisticated date manipulation logic and reusable filtering architecture that powers all the time-based reports in the application. This was particularly challenging to implement but provides tremendous value to users.
+
+<img width="1188" height="1255" alt="image" src="https://github.com/user-attachments/assets/f7a792c3-0ff6-4988-858d-89d291c665ae" />

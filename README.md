@@ -20,7 +20,8 @@ The Accounting Ledger Application is a console-based financial tracking system t
 - **💰 Deposit Management**: Record income transactions with automatic timestamping
 - **💳 Payment Tracking**: Log expense transactions with negative amount handling
 - **📊 Ledger Display**: View all transactions with multiple filtering options
-- **🔍 Advanced Reporting**: Generate custom reports by date range and vendor
+- **📅 Advanced Date Filtering: Month-to-date, previous month, year-to-date, and previous year reports
+- **🔍 Vendor Search: Find transactions by vendor name with case-insensitive matching  
 - **💾 Data Persistence**: Automatic CSV file storage and loading
 - **🕒 Real-time Timestamps**: Automatic date and time recording for all transactions
 
@@ -101,6 +102,29 @@ src/
 
 **Purpose**: Extended reporting interface with placeholder options for future date-based filtering functionality.
 
+### 📊 Month-to-Date Report Output
+<img width="818" height="387" alt="image" src="https://github.com/user-attachments/assets/461b4cba-cde1-4cb3-9af5-339ba7293ab4" />
+
+**Purpose**: Shows all transactions from the first day of the current month to today, helping users track current monthly activity.
+
+### 📅 Previous Month Report Output
+<img width="838" height="108" alt="image" src="https://github.com/user-attachments/assets/22cfcb85-3b9a-4f77-a0c0-d2fbdb8a03e6" />
+
+**Purpose**: Displays all transactions from the previous complete month for historical analysis and comparison
+
+### 📈 Year-to-Date Report Output
+<img width="820" height="385" alt="image" src="https://github.com/user-attachments/assets/57b9f439-85a6-4d08-8455-4eb8d92c3992" />
+
+**Purpose**: Comprehensive view of all transactions from January 1st of the current year to today for annual financial tracking.
+
+### 🗓️ Previous Year Report Output
+<img width="818" height="86" alt="image" src="https://github.com/user-attachments/assets/c918478a-218b-48fb-9383-bdd80ec3b38b" />
+
+**Purpose**: Complete annual view of the previous year's transactions for year-over-year financial comparison.
+
+
+
+
 ## Technical Details
 
 ### Data Storage
@@ -110,9 +134,17 @@ src/
 
 ### Key Algorithms
 - **Reverse Iteration**: Displays newest transactions first
+- **Date Range Filtering**: Advanced LocalDate-based filtering for reports
 - **Real-time Filtering**: Dynamic filtering of deposits and payments
 - **Case-insensitive Search**: Vendor lookup without case sensitivity
 - **Amount Processing**: Automatic negative conversion for payments
+
+### Date Handling Features
+- **Month-to-Date**: Automatically calculates from 1st of current month to today
+- **Previous Month**: Calculates complete previous month regardless of current date
+- **Year-to-Date**: From January 1st to current date
+- **Previous Year**: Complete calendar year analysis
+- **ISO Date Format**: Consistent date parsing using DateTimeFormatter.ISO_LOCAL_DATE
 
 ### Error Handling
 - File I/O exceptions with user-friendly messages

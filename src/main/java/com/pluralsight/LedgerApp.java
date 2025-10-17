@@ -191,7 +191,7 @@ public class LedgerApp {
 
     }
 
-    // This part here will filter the central data to show only income entries (deposits).
+    // This part here will filter the central data to show only income entries (deposits). Needs to be positive
     public static void displayDeposits() {
         System.out.println("\n===== LEDGER: DEPOSITS ONLY  =====");
 
@@ -222,15 +222,14 @@ public class LedgerApp {
         for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
             Transaction t = TransactionManager.transactions.get(i);
 
-            //Conditional (if statement): Checks if t.getAmount() < 0. Math.abs(): Used to display the negative stored amount as a positive value for clearer reporting.
+            //Conditional (if statement): Only show negative amounts
             if (t.getAmount() < 0) {
-                // Use Math.abs() to display the amount as positive for reporting clarity
                 System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n",
                         t.getDate(),
                         t.getTime(),
                         t.getDescription(),
                         t.getVendor(),
-                        Math.abs(t.getAmount()));
+                        t.getAmount());
             }
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------");

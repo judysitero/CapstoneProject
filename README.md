@@ -9,7 +9,6 @@ A comprehensive Java-based accounting ledger system that allows users to track f
 - [Usage Guide](#usage-guide)
 - [Output Descriptions](#output-descriptions)
 - [Technical Details](#technical-details)
-- [Future Enhancements](#future-enhancements)
 
 ## Overview
 

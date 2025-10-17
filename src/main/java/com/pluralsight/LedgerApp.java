@@ -2,8 +2,10 @@ package com.pluralsight;
 
 import com.pluralsight.Transaction;
 import com.pluralsight.TransactionManager;
+import com.sun.jdi.PathSearchingVirtualMachine;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 /** My User Interface (UI) and Control Center. This tells the data manager what to and displays the result to the user */
@@ -41,13 +43,15 @@ public class LedgerApp {
                     break;
                 case "P":
                     makePayment();
+                    break;
                 case "L":
                     showLedgerScreen();
+                    break;
                 case "X":
                     endPorgram = true;
                     break;
                 default:
-                    System.out.println("Invalid choice. Please select D, P, L, or X");
+                    System.out.println("INVALID CHOICE: Please select D, P, L, or X");
                     break;
 
             }
@@ -110,7 +114,7 @@ public class LedgerApp {
         String time = java.time.LocalTime.now().withNano(0).toString();
 
 
-        // Multiply by -1 to create a debit entry
+        // Multiply by -1 to create a debit entry (ensures amount is negative for Payments)
         double negativeAmount = -1 * amount;
 
         Transaction payment = new Transaction(date, time, description, vendor, negativeAmount);
@@ -235,6 +239,64 @@ public class LedgerApp {
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------------");
     }
 
+    public static void filterAndDisplayByDate(LocalDate startDate, LocalDate endDate, String reportTitle) {
+        System.out.println("\n===== LEDGER: " + reportTitle + " =====");
+
+        System.out.printf("%-10s | %-8s | %-30s | %-20s | %-10s\n", "Date", "Time", "Description", "Vendor", "Amount");
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        for (int i = TransactionManager.transactions.size() - 1; i >= 0; i--) {
+            Transaction t = TransactionManager.transactions.get(i);
+
+            // Get the comparable date
+            LocalDate transactionDate = t.getLocalDate();
+
+            if (!transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate)) {
+                System.out.printf("%-10s | %-8s | %-30s | %-20s | $%,10.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+
+        }
+        System.out.println("------------------------------------------------------------------------------------------------------");
+    }
+
+    public static void generateMonthToDateReport() {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = LocalDate.of(today.getYear(), today.getMonth(), 1);
+        filterAndDisplayByDate(startDate, today, "MONTH TO DATE");
+
+    }
+
+    public static void generatePreviousMonthReport() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastMonth = today.minusMonths(1);
+        LocalDate startDate = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(),1);
+        LocalDate endDate = LocalDate.of(today.getYear(), today.getMonth(), 1).minusDays(1);
+        filterAndDisplayByDate(startDate, endDate, "PREVIOUS MONTH" );
+
+
+    }
+
+    public static void generateYearToDateReport() {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = LocalDate.of(today.getYear(), 1,1);
+        filterAndDisplayByDate(startDate, today, "YEAR TO DATE");
+
+    }
+
+    public static void generatePreviousYearReport() {
+        LocalDate today = LocalDate.now();
+        int lastYear = today.getYear() - 1;
+        LocalDate startDate = LocalDate.of(lastYear, 1, 1);
+        LocalDate endDate = LocalDate.of(lastYear, 12, 31);
+        filterAndDisplayByDate(startDate, endDate, "PREVIOUS YEAR");
+
+    }
+
     public static void showReportsScreen() {
         String choice;
         do {
@@ -250,10 +312,16 @@ public class LedgerApp {
             choice = scanner.nextLine().toUpperCase();
             switch (choice) {
                 case "1":
+                    generateMonthToDateReport();
+                    break;
                 case "2":
+                    generatePreviousMonthReport();
+                    break;
                 case "3":
+                    generateYearToDateReport();
+                    break;
                 case "4":
-                    System.out.println("Report " + choice + " is a Placeholder for Date Logic");
+                    generatePreviousYearReport();
                     break;
                 case "5":
                     findEntriesByVendor();

@@ -1,4 +1,6 @@
 package com.pluralsight;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Transaction {
     private String date;
@@ -14,9 +16,17 @@ public class Transaction {
         this.vendor = vendor;
         this.amount = amount;
     }
+    //My helper methods
 
     public String toCsvString() {
+        // making our pipe-delimited CSV String: date|time|description|vendor|amount
         return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
+    }
+
+    public LocalDate getLocalDate() {
+        return LocalDate.parse(this.date, DateTimeFormatter.ISO_LOCAL_DATE); //Workbook 3a (pg32)
+        // ISO_LOCAL_DATE matches the default format of LocalDate.toString() (YYYY-MM-DD)
+
     }
 
     public String getDate() {
